@@ -1,0 +1,82 @@
+import { HeadContent, Scripts, createRootRoute, useLocation } from '@tanstack/react-router'
+import Footer from '../components/Footer'
+import Header from '../components/Header'
+
+import appCss from '../styles.css?url'
+
+const THEME_INIT_SCRIPT = `(function(){try{var stored=window.localStorage.getItem('theme');var mode=(stored==='light'||stored==='dark'||stored==='auto')?stored:'auto';var prefersDark=window.matchMedia('(prefers-color-scheme: dark)').matches;var resolved=mode==='auto'?(prefersDark?'dark':'light'):mode;var root=document.documentElement;root.classList.remove('light','dark');root.classList.add(resolved);if(mode==='auto'){root.removeAttribute('data-theme')}else{root.setAttribute('data-theme',mode)}root.style.colorScheme=resolved;}catch(e){}})();`
+
+const DISABLE_PINCH_ZOOM_SCRIPT = `(function(){try{document.addEventListener('gesturestart',function(e){e.preventDefault();},{passive:false});document.addEventListener('gesturechange',function(e){e.preventDefault();},{passive:false});document.addEventListener('gestureend',function(e){e.preventDefault();},{passive:false});document.addEventListener('touchstart',function(e){if(e.touches&&e.touches.length>1){e.preventDefault();}},{passive:false});}catch(e){}})();`
+
+export const Route = createRootRoute({
+  head: () => ({
+    meta: [
+      {
+        charSet: 'utf-8',
+      },
+      {
+        name: 'viewport',
+        content: 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no',
+      },
+      {
+        title: 'TroxCard',
+      },
+    ],
+    links: [
+      {
+        rel: 'stylesheet',
+        href: appCss,
+      },
+    ],
+    scripts: [
+      {
+        src: 'https://accounts.google.com/gsi/client',
+        async: true,
+        defer: true,
+      },
+    ],
+  }),
+  notFoundComponent: DefaultNotFound,
+  shellComponent: RootDocument,
+})
+
+function DefaultNotFound() {
+  return (
+    <main className="min-h-screen bg-slate-900 text-white flex flex-col items-center justify-center p-6 text-center font-sans">
+      <div className="w-20 h-20 rounded-3xl bg-purple-500/20 text-purple-400 flex items-center justify-center mb-5 border border-purple-500/30 shadow-xl">
+        <span className="text-3xl font-black">404</span>
+      </div>
+      <h1 className="text-2xl font-extrabold tracking-tight mb-2">Page Not Found</h1>
+      <p className="text-slate-400 text-sm max-w-sm mb-6 leading-relaxed">
+        The link or digital business card you are trying to access does not exist or has been moved.
+      </p>
+      <a 
+        href="/" 
+        className="px-6 py-3 bg-[#7c3aed] hover:bg-[#6d28d9] active:scale-95 text-white font-bold text-xs rounded-2xl shadow-lg shadow-purple-500/25 transition no-underline inline-flex items-center gap-2"
+      >
+        Return to Home
+      </a>
+    </main>
+  )
+}
+
+function RootDocument({ children }: { children: React.ReactNode }) {
+  const location = useLocation()
+  const hideHeaderFooter = location.pathname === '/' || location.pathname.startsWith('/c/')
+
+  return (
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
+        <script dangerouslySetInnerHTML={{ __html: DISABLE_PINCH_ZOOM_SCRIPT }} />
+        <HeadContent />
+      </head>
+      <body className="font-sans antialiased [overflow-wrap:anywhere] selection:bg-[rgba(79,184,178,0.24)]">
+        {!hideHeaderFooter && <Header />}
+        {children}
+        {!hideHeaderFooter && <Footer />}
+        <Scripts />
+      </body>
+    </html>
+  )
+}

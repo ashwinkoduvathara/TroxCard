@@ -1,0 +1,48 @@
+services:
+  mongodb:
+    image: mongo:7.0
+    container_name: troxcard-mongodb
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_DATABASE: troxcard
+    volumes:
+      - mongo_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - troxcard-network
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: troxcard-app
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      - MONGODB_URI=mongodb://mongodb:27017/troxcard
+      - NODE_ENV=production
+      - PORT=3000
+      - HOST=0.0.0.0
+    env_file:
+      - .env
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    networks:
+      - troxcard-network
+
+volumes:
+  mongo_data:
+    driver: local
+
+networks:
+  troxcard-network:
+    driver: bridge
