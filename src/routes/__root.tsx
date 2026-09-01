@@ -65,13 +65,13 @@ function RootDocument({ children }: { children: React.ReactNode }) {
   const hideHeaderFooter = location.pathname === '/' || location.pathname.startsWith('/c/')
 
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning className="bg-[#2e1065]">
       <head>
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: DISABLE_PINCH_ZOOM_SCRIPT }} />
         <HeadContent />
       </head>
-      <body className="font-sans antialiased [overflow-wrap:anywhere] selection:bg-[rgba(79,184,178,0.24)]">
+      <body className="font-sans antialiased [overflow-wrap:anywhere] selection:bg-[rgba(79,184,178,0.24)] bg-gradient-to-b from-[#7c3aed] via-[#5b21b6] to-[#2e1065] min-h-screen text-white">
         {!hideHeaderFooter && <Header />}
         {children}
         {!hideHeaderFooter && <Footer />}

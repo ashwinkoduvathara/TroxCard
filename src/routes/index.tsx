@@ -708,20 +708,20 @@ function Dashboard() {
       <main className="fixed inset-0 w-screen h-screen flex flex-col justify-between items-center bg-gradient-to-b from-[#7c3aed] via-[#5b21b6] to-[#2e1065] text-white p-8 select-none font-sans z-50">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-72 h-72 rounded-full bg-violet-400/20 blur-[120px] pointer-events-none" />
         <div className="flex-1" />
-        <div className="flex flex-col items-center text-center animate-pulse duration-1000">
+        <div className="flex flex-col items-center justify-center text-center max-w-xs mx-auto">
           <img 
             src="/logo.png" 
             alt="TroxCard Logo" 
-            className="w-64 sm:w-80 h-auto select-none pointer-events-none mix-blend-screen"
+            className="w-48 sm:w-60 h-auto max-h-24 object-contain select-none pointer-events-none drop-shadow-md mb-2"
           />
-          <p className="text-[10px] sm:text-xs font-semibold tracking-[0.3em] uppercase text-white/95 -mt-6">
+          <p className="text-[10px] sm:text-xs font-semibold tracking-[0.3em] uppercase text-white/95 mt-1">
             SHARE IN A TAP
           </p>
         </div>
         <div className="flex-1" />
         <div className="flex flex-col items-center gap-4 mb-8">
           <div
-            className="w-10 h-10 rounded-full border-[3.5px] border-white/20 border-t-white animate-spin"
+            className="w-9 h-9 rounded-full border-[3px] border-white/20 border-t-white animate-spin"
             style={{ animationDuration: '0.8s' }}
           />
           <span className="text-[10px] font-bold tracking-[0.25em] text-white/80 uppercase">
