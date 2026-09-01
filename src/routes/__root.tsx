@@ -19,7 +19,43 @@ export const Route = createRootRoute({
         content: 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no',
       },
       {
-        title: 'TroxCard',
+        title: 'TroxCard | Digital Business Card & Smart Sharing',
+      },
+      {
+        name: 'description',
+        content: 'Create, customize, and share your digital business card in a tap with TroxCard. NFC & QR code enabled smart networking.',
+      },
+      {
+        property: 'og:type',
+        content: 'website',
+      },
+      {
+        property: 'og:title',
+        content: 'TroxCard - Digital Business Cards & Smart Networking',
+      },
+      {
+        property: 'og:description',
+        content: 'Share your professional profile instantly with TroxCard. Modern digital business cards with QR codes and analytics.',
+      },
+      {
+        property: 'og:url',
+        content: 'https://bcard.troxcard.in/',
+      },
+      {
+        property: 'og:image',
+        content: 'https://bcard.troxcard.in/logo.png',
+      },
+      {
+        name: 'twitter:card',
+        content: 'summary_large_image',
+      },
+      {
+        name: 'twitter:title',
+        content: 'TroxCard - Digital Business Cards',
+      },
+      {
+        name: 'twitter:description',
+        content: 'Share your professional profile instantly with TroxCard.',
       },
     ],
     links: [

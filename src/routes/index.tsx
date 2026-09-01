@@ -3474,9 +3474,9 @@ function Dashboard() {
 
           {/* Headings */}
           <div className="text-center mb-8">
-            <h2 className="text-2xl font-bold tracking-tight text-white mb-2">
+            <h1 className="text-2xl font-bold tracking-tight text-white mb-2">
               Welcome back!
-            </h2>
+            </h1>
             <p className="text-xs text-white/70">
               Log in to continue sharing smarter.
             </p>
@@ -3490,6 +3490,7 @@ function Dashboard() {
               <User className="absolute left-4 text-white/50 w-5 h-5 pointer-events-none" />
               <input 
                 type="text"
+                aria-label="Email Address or Mobile Number"
                 placeholder="Email or Mobile Number"
                 value={email}
                 onChange={e => setEmail(e.target.value)}
@@ -3503,6 +3504,7 @@ function Dashboard() {
                 <Lock className="absolute left-4 text-white/50 w-5 h-5 pointer-events-none" />
                 <input 
                   type={showPassword ? 'text' : 'password'}
+                  aria-label="Password"
                   placeholder="Password"
                   value={password}
                   onChange={e => setPassword(e.target.value)}
@@ -3510,6 +3512,7 @@ function Dashboard() {
                 />
                 <button
                   type="button"
+                  aria-label="Toggle password visibility"
                   onClick={() => setShowPassword(prev => !prev)}
                   className="absolute right-4 text-white/50 hover:text-white/80 border-none bg-transparent cursor-pointer transition"
                 >
@@ -3599,9 +3602,9 @@ function Dashboard() {
 
         {/* Headings */}
         <div className="text-center mb-8">
-          <h2 className="text-2xl font-bold tracking-tight text-white mb-2">
+          <h1 className="text-2xl font-bold tracking-tight text-white mb-2">
             Create your account
-          </h2>
+          </h1>
           <p className="text-xs text-white/70">
             Join Troxcard and start sharing smarter.
           </p>
@@ -3615,6 +3618,7 @@ function Dashboard() {
             <User className="absolute left-4 text-white/50 w-5 h-5 pointer-events-none" />
             <input 
               type="text"
+              aria-label="Full Name"
               placeholder="Full Name"
               value={fullName}
               onChange={e => setFullName(e.target.value)}
