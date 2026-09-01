@@ -139,19 +139,31 @@ END:VCARD`
         <div className="flex flex-col items-center text-center mt-2 mb-6">
           
           {/* Circular Photo Box with Green Dot Status Badge */}
-          <div className="relative mb-4">
-            <div className="w-28 h-28 rounded-full border-4 border-white shadow-xl overflow-hidden bg-purple-100 flex items-center justify-center">
+          <div className="relative mb-4 shrink-0">
+            <div className="w-28 h-28 rounded-full border-4 border-white shadow-xl overflow-hidden bg-purple-200 flex items-center justify-center shrink-0">
               {card.photoUrl ? (
-                <img src={card.photoUrl} alt={name} className="w-full h-full object-cover" />
+                <img 
+                  src={card.photoUrl} 
+                  alt={name} 
+                  loading="eager"
+                  decoding="async"
+                  width={112}
+                  height={112}
+                  className="w-full h-full object-cover shrink-0" 
+                />
               ) : (
                 <img 
                   src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80" 
                   alt={name} 
-                  className="w-full h-full object-cover" 
+                  loading="eager"
+                  decoding="async"
+                  width={112}
+                  height={112}
+                  className="w-full h-full object-cover shrink-0" 
                 />
               )}
             </div>
-            <div className="w-5 h-5 bg-emerald-500 border-2 border-white rounded-full absolute bottom-1 right-1 shadow-sm" />
+            <div className="w-5 h-5 bg-emerald-500 border-2 border-white rounded-full absolute bottom-1 right-1 shadow-sm shrink-0" />
           </div>
 
           {/* User Name & Blue Verified Badge */}

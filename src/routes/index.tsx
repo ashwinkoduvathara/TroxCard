@@ -956,11 +956,17 @@ function Dashboard() {
               ? 'bg-[#3b0764]/98 backdrop-blur-md border-b border-purple-900/40 shadow-lg text-white' 
               : 'bg-transparent text-white border-b border-transparent shadow-none'
           }`}>
-            <img 
-              src="/logo.png" 
-              alt="TroxCard Logo" 
-              className="h-8 sm:h-9 w-auto select-none pointer-events-none drop-shadow-sm"
-            />
+            <div className="h-8 sm:h-9 w-32 sm:w-36 flex items-center shrink-0">
+              <img 
+                src="/logo.png" 
+                alt="TroxCard Logo" 
+                width={144}
+                height={36}
+                loading="eager"
+                decoding="async"
+                className="h-full w-auto object-contain select-none pointer-events-none drop-shadow-sm"
+              />
+            </div>
             <div className="flex items-center gap-3">
               {/* Notifications Alert Button */}
               <button className="relative p-1.5 rounded-full hover:bg-white/10 active:scale-95 transition text-white border-none bg-transparent cursor-pointer">
@@ -974,10 +980,18 @@ function Dashboard() {
               <div className="relative" ref={dropdownRef}>
                 <button 
                   onClick={() => setProfileDropdown(prev => !prev)}
-                  className="w-9.5 h-9.5 rounded-full overflow-hidden border-2 border-white/30 bg-violet-950 flex items-center justify-center cursor-pointer active:scale-95 transition shadow-sm"
+                  className="w-9.5 h-9.5 rounded-full overflow-hidden border-2 border-white/30 bg-violet-950 flex items-center justify-center cursor-pointer active:scale-95 transition shadow-sm shrink-0"
                 >
                   {user.picture ? (
-                    <img src={user.picture} alt={user.name} className="w-full h-full object-cover" />
+                    <img 
+                      src={user.picture} 
+                      alt={user.name} 
+                      width={38}
+                      height={38}
+                      loading="eager"
+                      decoding="async"
+                      className="w-full h-full object-cover shrink-0" 
+                    />
                   ) : (
                     <span className="text-xs font-bold uppercase text-white">
                       {user.name?.charAt(0)}
@@ -990,9 +1004,17 @@ function Dashboard() {
                   <div className="absolute right-0 mt-3 w-64 bg-white rounded-2xl shadow-2xl border border-slate-100 p-2.5 z-50 text-slate-700 animate-fade-in">
                     {/* User Header Block */}
                     <div className="p-3 bg-violet-50/70 rounded-xl mb-2 flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full border border-purple-200 bg-violet-600 text-white flex items-center justify-center font-bold text-sm shrink-0">
+                      <div className="w-10 h-10 rounded-full border border-purple-200 bg-violet-600 text-white flex items-center justify-center font-bold text-sm shrink-0 overflow-hidden">
                         {user.picture ? (
-                          <img src={user.picture} alt={user.name} className="w-full h-full rounded-full object-cover" />
+                          <img 
+                            src={user.picture} 
+                            alt={user.name} 
+                            width={40}
+                            height={40}
+                            loading="lazy"
+                            decoding="async"
+                            className="w-full h-full rounded-full object-cover shrink-0" 
+                          />
                         ) : (
                           user.name?.charAt(0).toUpperCase()
                         )}
@@ -1091,9 +1113,17 @@ function Dashboard() {
               <div className="flex justify-between items-start z-10">
                 <div className="flex items-center gap-3">
                   {/* Card Profile Picture with Green Checkmark Badge */}
-                  <div className="w-14 h-14 rounded-full border border-white/30 bg-purple-400/30 flex items-center justify-center font-bold text-xl text-white relative shrink-0 shadow-sm">
+                  <div className="w-14 h-14 rounded-full border border-white/30 bg-purple-400/30 flex items-center justify-center font-bold text-xl text-white relative shrink-0 shadow-sm overflow-hidden">
                     {user.picture ? (
-                      <img src={user.picture} alt={user.name} className="w-full h-full rounded-full object-cover" />
+                      <img 
+                        src={user.picture} 
+                        alt={user.name} 
+                        width={56}
+                        height={56}
+                        loading="eager"
+                        decoding="async"
+                        className="w-full h-full rounded-full object-cover shrink-0" 
+                      />
                     ) : (
                       user.name?.charAt(0).toUpperCase()
                     )}
@@ -2232,13 +2262,17 @@ function Dashboard() {
                           </div>
 
                           {/* Avatar */}
-                          <div className="w-8 h-8 rounded-full border border-white/60 overflow-hidden bg-purple-200 mt-2 mb-1 shrink-0 relative">
+                          <div className="w-8 h-8 rounded-full border border-white/60 overflow-hidden bg-purple-200 mt-2 mb-1 shrink-0 relative flex items-center justify-center">
                             <img 
                               src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80" 
                               alt="Ashwin"
-                              className="w-full h-full object-cover" 
+                              loading="lazy"
+                              decoding="async"
+                              width={32}
+                              height={32}
+                              className="w-full h-full object-cover shrink-0" 
                             />
-                            <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full absolute bottom-0 right-0 border border-white" />
+                            <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full absolute bottom-0 right-0 border border-white shrink-0" />
                           </div>
 
                           {/* Name & Title */}
@@ -3332,11 +3366,17 @@ function Dashboard() {
         <div className="w-full max-w-sm flex flex-col items-center z-10 mt-4 mb-8">
           
           {/* Logo */}
-          <img 
-            src="/logo.png" 
-            alt="TroxCard Logo" 
-            className="w-56 sm:w-64 h-auto select-none pointer-events-none mix-blend-screen mb-8"
-          />
+          <div className="w-56 sm:w-64 h-16 flex items-center justify-center mb-8 shrink-0">
+            <img 
+              src="/logo.png" 
+              alt="TroxCard Logo" 
+              width={256}
+              height={64}
+              loading="eager"
+              decoding="async"
+              className="w-full h-full object-contain select-none pointer-events-none drop-shadow-md"
+            />
+          </div>
 
           {/* Headings */}
           <div className="text-center mb-8">
@@ -3451,11 +3491,17 @@ function Dashboard() {
       <div className="w-full max-w-sm flex flex-col items-center z-10 mt-4 mb-8">
         
         {/* Logo */}
-        <img 
-          src="/logo.png" 
-          alt="TroxCard Logo" 
-          className="w-56 sm:w-64 h-auto select-none pointer-events-none mix-blend-screen mb-8"
-        />
+        <div className="w-56 sm:w-64 h-16 flex items-center justify-center mb-8 shrink-0">
+          <img 
+            src="/logo.png" 
+            alt="TroxCard Logo" 
+            width={256}
+            height={64}
+            loading="eager"
+            decoding="async"
+            className="w-full h-full object-contain select-none pointer-events-none drop-shadow-md"
+          />
+        </div>
 
         {/* Headings */}
         <div className="text-center mb-8">
