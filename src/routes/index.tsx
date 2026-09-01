@@ -297,6 +297,10 @@ function Dashboard() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   
+  // Signup & Auth Error States
+  const [signupError, setSignupError] = useState('')
+  const [loginError, setLoginError] = useState('')
+  
   // Signup Form States
   const [fullName, setFullName] = useState('')
   const [mobileNumber, setMobileNumber] = useState('')
@@ -642,34 +646,37 @@ function Dashboard() {
   // Handle local credential login (MongoDB Authenticated)
   const handleLocalLogin = async (e: React.FormEvent) => {
     e.preventDefault()
+    setLoginError('')
     if (!email || !password) {
-      alert("Please enter both email/phone and password.")
+      setLoginError("Please enter both email/phone and password.")
       return
     }
     
     try {
       const res = await loginUser({ data: { email, password } })
       if (res && res.success) {
+        setLoginError('')
         handleUserLoginSuccess(res.user)
       }
     } catch (err: any) {
-      alert(err.message || "Failed to log in.")
+      setLoginError(err.message || "Failed to log in.")
     }
   }
 
   // Handle local signup (MongoDB Registered & Logged In)
   const handleLocalSignup = async (e: React.FormEvent) => {
     e.preventDefault()
+    setSignupError('')
     if (!fullName || !mobileNumber || !signupEmail || !signupPassword || !confirmPassword) {
-      alert("Please fill in all fields.")
+      setSignupError("Please fill in all required fields.")
       return
     }
     if (signupPassword !== confirmPassword) {
-      alert("Passwords do not match.")
+      setSignupError("Passwords do not match. Please check your entries.")
       return
     }
     if (!agreeTerms) {
-      alert("Please agree to the Terms of Service and Privacy Policy.")
+      setSignupError("Please agree to the Terms of Service and Privacy Policy.")
       return
     }
     
@@ -684,10 +691,12 @@ function Dashboard() {
         }
       })
       if (res && res.success) {
+        setSignupError('')
         handleUserLoginSuccess(res.user)
       }
     } catch (err: any) {
-      alert(err.message || "Failed to register account.")
+      const errorMessage = err.message || "Failed to register account."
+      setSignupError(errorMessage)
     }
   }
 
@@ -3613,6 +3622,14 @@ function Dashboard() {
         {/* Form */}
         <form onSubmit={handleLocalSignup} className="w-full flex flex-col gap-4">
           
+          {/* Error Banner Alert */}
+          {signupError && (
+            <div className="w-full p-3 bg-red-500/25 border border-red-400/50 rounded-xl text-red-100 text-xs font-semibold flex items-center gap-2 mb-1 shadow-sm">
+              <Info size={18} className="shrink-0 text-red-300" />
+              <span>{signupError}</span>
+            </div>
+          )}
+
           {/* Full Name field */}
           <div className="relative flex items-center">
             <User className="absolute left-4 text-white/50 w-5 h-5 pointer-events-none" />

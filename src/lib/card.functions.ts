@@ -70,9 +70,18 @@ export const registerUser = createServerFn({ method: 'POST' })
     const { name, email, number, password, companyName } = data
     await connectDB()
 
-    const existingUser = await User.findOne({ email: email.toLowerCase() })
-    if (existingUser) {
-      throw new Error('Email already registered')
+    const cleanEmail = (email || '').trim().toLowerCase()
+    const existingEmailUser = await User.findOne({ email: cleanEmail })
+    if (existingEmailUser) {
+      throw new Error('This email address is already in use. Please log in or use a different email.')
+    }
+
+    if (number) {
+      const cleanNumber = number.trim()
+      const existingPhoneUser = await User.findOne({ number: cleanNumber })
+      if (existingPhoneUser) {
+        throw new Error('This mobile number is already in use. Please log in or use a different number.')
+      }
     }
 
     const newUser = new User({
