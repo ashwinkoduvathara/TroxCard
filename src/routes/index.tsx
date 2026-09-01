@@ -705,26 +705,120 @@ function Dashboard() {
   // 1. LOADING SCREEN STATE
   if (loading) {
     return (
-      <main className="fixed inset-0 w-screen h-screen flex flex-col justify-between items-center bg-gradient-to-b from-[#7c3aed] via-[#5b21b6] to-[#2e1065] text-white p-8 select-none font-sans z-50">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-72 h-72 rounded-full bg-violet-400/20 blur-[120px] pointer-events-none" />
-        <div className="flex-1" />
-        <div className="flex flex-col items-center justify-center text-center max-w-xs mx-auto">
+      <main 
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          width: '100vw',
+          height: '100vh',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          background: 'linear-gradient(to bottom, #7c3aed, #5b21b6, #2e1065)',
+          color: '#ffffff',
+          padding: '2rem',
+          boxSizing: 'border-box',
+          zIndex: 9999,
+          fontFamily: 'system-ui, -apple-system, sans-serif'
+        }}
+        className="fixed inset-0 w-screen h-screen flex flex-col justify-between items-center bg-gradient-to-b from-[#7c3aed] via-[#5b21b6] to-[#2e1065] text-white p-8 select-none font-sans z-50"
+      >
+        <div 
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: '50%',
+            transform: 'translateX(-50%)',
+            width: '18rem',
+            height: '18rem',
+            borderRadius: '9999px',
+            background: 'rgba(167, 139, 250, 0.2)',
+            filter: 'blur(120px)',
+            pointerEvents: 'none'
+          }}
+          className="absolute top-0 left-1/2 -translate-x-1/2 w-72 h-72 rounded-full bg-violet-400/20 blur-[120px] pointer-events-none" 
+        />
+        <div style={{ flex: 1 }} className="flex-1" />
+        <div 
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            textAlign: 'center',
+            maxWidth: '20rem',
+            margin: '0 auto'
+          }}
+          className="flex flex-col items-center justify-center text-center max-w-xs mx-auto"
+        >
           <img 
             src="/logo.png" 
             alt="TroxCard Logo" 
+            width={240}
+            height={80}
+            loading="eager"
+            decoding="async"
+            style={{
+              maxWidth: '200px',
+              maxHeight: '75px',
+              width: 'auto',
+              height: 'auto',
+              objectFit: 'contain',
+              display: 'block',
+              margin: '0 auto 0.5rem auto'
+            }}
             className="w-48 sm:w-60 h-auto max-h-24 object-contain select-none pointer-events-none drop-shadow-md mb-2"
           />
-          <p className="text-[10px] sm:text-xs font-semibold tracking-[0.3em] uppercase text-white/95 mt-1">
+          <p 
+            style={{
+              fontSize: '11px',
+              fontWeight: 600,
+              letterSpacing: '0.3em',
+              textTransform: 'uppercase',
+              color: 'rgba(255, 255, 255, 0.95)',
+              margin: '0.25rem 0 0 0'
+            }}
+            className="text-[10px] sm:text-xs font-semibold tracking-[0.3em] uppercase text-white/95 mt-1"
+          >
             SHARE IN A TAP
           </p>
         </div>
-        <div className="flex-1" />
-        <div className="flex flex-col items-center gap-4 mb-8">
+        <div style={{ flex: 1 }} className="flex-1" />
+        <div 
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: '1rem',
+            marginBottom: '2rem'
+          }}
+          className="flex flex-col items-center gap-4 mb-8"
+        >
           <div
+            style={{
+              width: '2.25rem',
+              height: '2.25rem',
+              borderRadius: '9999px',
+              border: '3px solid rgba(255, 255, 255, 0.2)',
+              borderTopColor: '#ffffff',
+              animationDuration: '0.8s'
+            }}
             className="w-9 h-9 rounded-full border-[3px] border-white/20 border-t-white animate-spin"
-            style={{ animationDuration: '0.8s' }}
           />
-          <span className="text-[10px] font-bold tracking-[0.25em] text-white/80 uppercase">
+          <span 
+            style={{
+              fontSize: '10px',
+              fontWeight: 700,
+              letterSpacing: '0.25em',
+              color: 'rgba(255, 255, 255, 0.8)',
+              textTransform: 'uppercase'
+            }}
+            className="text-[10px] font-bold tracking-[0.25em] text-white/80 uppercase"
+          >
             LOADING...
           </span>
         </div>

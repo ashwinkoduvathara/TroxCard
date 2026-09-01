@@ -67,6 +67,22 @@ function RootDocument({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning className="bg-[#2e1065]">
       <head>
+        <style dangerouslySetInnerHTML={{ __html: `
+          html, body {
+            margin: 0 !important;
+            padding: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            background-color: #2e1065 !important;
+            background-image: linear-gradient(to bottom, #7c3aed, #5b21b6, #2e1065) !important;
+            color: #ffffff !important;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+          }
+          img {
+            max-width: 100%;
+            height: auto;
+          }
+        ` }} />
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: DISABLE_PINCH_ZOOM_SCRIPT }} />
         <HeadContent />
