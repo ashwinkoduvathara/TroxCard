@@ -60,6 +60,26 @@ export const checkSlugAvailability = createServerFn({ method: 'GET' })
     return { available: !existing }
   })
 
+export const checkNumberAvailability = createServerFn({ method: 'POST' })
+  .validator((data?: { number?: string }) => data)
+  .handler(async ({ data }) => {
+    const rawNumber = (data?.number || '').trim()
+    if (!rawNumber || rawNumber.length < 5) return { isRegistered: false }
+    await connectDB()
+    const existing = await User.findOne({ number: rawNumber })
+    return { isRegistered: Boolean(existing) }
+  })
+
+export const checkEmailAvailability = createServerFn({ method: 'POST' })
+  .validator((data?: { email?: string }) => data)
+  .handler(async ({ data }) => {
+    const rawEmail = (data?.email || '').trim().toLowerCase()
+    if (!rawEmail || !rawEmail.includes('@')) return { isRegistered: false }
+    await connectDB()
+    const existing = await User.findOne({ email: rawEmail })
+    return { isRegistered: Boolean(existing) }
+  })
+
 // ==========================================
 // AUTHENTICATION ENDPOINTS
 // ==========================================
@@ -471,6 +491,9 @@ export const sendOtpEmailServer = createServerFn({ method: 'POST' })
     const otpCode = Math.floor(100000 + Math.random() * 900000).toString()
     const otpExpiresAt = new Date(Date.now() + 10 * 60 * 1000) // 10 minutes expiry
 
+    // Log generated OTP in server logs for local development debugging
+    console.log(`[OTP Server Log] Target: ${targetEmail} | Code: ${otpCode}`)
+
     // Save dynamic OTP to MongoDB User document
     if (dbUser) {
       dbUser.otpCode = otpCode
@@ -499,11 +522,9 @@ export const sendOtpEmailServer = createServerFn({ method: 'POST' })
       }
     }
 
-    // Graceful fallback response if ZeptoMail credits are exhausted
     return {
-      success: true,
-      message: `Verification code sent! (Use code ${otpCode} or fallback 123456 if email is delayed)`,
-      simulated: true,
+      success: false,
+      message: mailResult?.message || 'Failed to send verification code email. Please check your email configuration or try again later.',
     }
   })
 

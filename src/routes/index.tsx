@@ -8,7 +8,7 @@ import {
   ChevronLeft, Camera, Briefcase, Quote, Phone, Globe, MapPin, Link, Printer,
   FileText, Trash2, MousePointerClick, ChevronDown, Info, CreditCard
 } from 'lucide-react'
-import { registerUser, loginUser, syncGoogleUser, updateUserProfile, saveTroxCard, getTroxCardByUser, verifyOtpServer, trackCardShare, trackCardScan, getCurrentUser, logoutUser, sendOtpEmailServer } from '../lib/card.functions'
+import { registerUser, loginUser, syncGoogleUser, updateUserProfile, saveTroxCard, getTroxCardByUser, verifyOtpServer, trackCardShare, trackCardScan, getCurrentUser, logoutUser, sendOtpEmailServer, checkNumberAvailability, checkEmailAvailability } from '../lib/card.functions'
 import QRCode from 'qrcode'
 
 declare global {
@@ -304,11 +304,59 @@ function Dashboard() {
   // Signup Form States
   const [fullName, setFullName] = useState('')
   const [mobileNumber, setMobileNumber] = useState('')
+  const [isMobileRegistered, setIsMobileRegistered] = useState(false)
   const [signupEmail, setSignupEmail] = useState('')
+  const [isEmailRegistered, setIsEmailRegistered] = useState(false)
   const [signupCompany] = useState('')
   const [signupPassword, setSignupPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [agreeTerms, setAgreeTerms] = useState(false)
+
+  // Real-time Mobile Number Registration Check
+  useEffect(() => {
+    const timer = setTimeout(async () => {
+      const cleanNum = mobileNumber.trim()
+      if (cleanNum.length >= 5) {
+        try {
+          const res = await checkNumberAvailability({ data: { number: cleanNum } })
+          if (res && res.isRegistered) {
+            setIsMobileRegistered(true)
+          } else {
+            setIsMobileRegistered(false)
+          }
+        } catch (e) {
+          setIsMobileRegistered(false)
+        }
+      } else {
+        setIsMobileRegistered(false)
+      }
+    }, 300)
+
+    return () => clearTimeout(timer)
+  }, [mobileNumber])
+
+  // Real-time Email Registration Check
+  useEffect(() => {
+    const timer = setTimeout(async () => {
+      const cleanEmail = signupEmail.trim().toLowerCase()
+      if (cleanEmail && cleanEmail.includes('@') && cleanEmail.split('@')[1]?.includes('.')) {
+        try {
+          const res = await checkEmailAvailability({ data: { email: cleanEmail } })
+          if (res && res.isRegistered) {
+            setIsEmailRegistered(true)
+          } else {
+            setIsEmailRegistered(false)
+          }
+        } catch (e) {
+          setIsEmailRegistered(false)
+        }
+      } else {
+        setIsEmailRegistered(false)
+      }
+    }, 300)
+
+    return () => clearTimeout(timer)
+  }, [signupEmail])
 
   // Auth User Profile State (Sets to default mock profile if they log in normally)
   const [user, setUser] = useState<any>(null)
@@ -592,7 +640,6 @@ function Dashboard() {
     } else {
       setVerifyStep('otp')
       setShowVerifyModal(true)
-      handleResendOtp().catch(() => {})
     }
   }
 
@@ -669,6 +716,14 @@ function Dashboard() {
     setSignupError('')
     if (!fullName || !mobileNumber || !signupEmail || !signupPassword || !confirmPassword) {
       setSignupError("Please fill in all required fields.")
+      return
+    }
+    if (isMobileRegistered) {
+      setSignupError("This mobile number is already registered. Please log in or use a different number.")
+      return
+    }
+    if (isEmailRegistered) {
+      setSignupError("This email address is already registered. Please log in or use a different email.")
       return
     }
     if (signupPassword !== confirmPassword) {
@@ -1230,9 +1285,6 @@ function Dashboard() {
                     ) : (
                       user.name?.charAt(0).toUpperCase()
                     )}
-                    <div className="absolute -bottom-0.5 -right-0.5 w-4.5 h-4.5 rounded-full bg-green-500 border-2 border-[#5b21b6] flex items-center justify-center text-white shadow-sm">
-                      <Check size={10} strokeWidth={3.5} />
-                    </div>
                   </div>
                   <div className="min-w-0">
                     <h2 className="text-base font-bold text-white truncate max-w-[180px]">{cardFullName || user.name}</h2>
@@ -2496,13 +2548,6 @@ function Dashboard() {
           <div className="fixed inset-0 bg-slate-900/80 backdrop-blur-md z-50 flex items-center justify-center p-3 sm:p-4 select-none animate-fade-in">
             <div className="w-full max-w-[340px] bg-white rounded-[1.75rem] p-4 sm:p-5 shadow-2xl relative animate-scale-up flex flex-col items-center border border-purple-100 text-center">
               
-              {/* Close Button on top right */}
-              <button 
-                onClick={() => setShowVerifyModal(false)}
-                className="absolute top-4 right-4 p-1.5 rounded-full hover:bg-slate-100 text-slate-400 hover:text-slate-600 border-none bg-transparent cursor-pointer transition"
-              >
-                <X size={16} />
-              </button>
 
               {/* STEP 1: OTP VERIFICATION VIEW */}
               {verifyStep === 'otp' && (
@@ -2595,7 +2640,7 @@ function Dashboard() {
                                       await verifyOtpServer({ data: { email: user.email, otp: newOtp.join(''), type: 'email' } })
                                       setEmailVerified(true)
                                     } catch (err: any) {
-                                      alert(err.message || 'Invalid OTP. Please enter 123456.')
+                                      alert(err.message || 'Invalid verification code. Please check your email inbox and try again.')
                                     }
                                   }
                                 }}
@@ -2836,6 +2881,7 @@ function Dashboard() {
                           return
                         }
                         setOtpRequested(true)
+                        handleResendOtp().catch(() => {})
                       } else {
                         // Mark verified in MongoDB and advance to Verified Success screen
                         try {
@@ -3644,27 +3690,51 @@ function Dashboard() {
           </div>
 
           {/* Mobile Number field */}
-          <div className="relative flex items-center">
-            <Smartphone className="absolute left-4 text-white/50 w-5 h-5 pointer-events-none" />
-            <input 
-              type="tel"
-              placeholder="Mobile Number"
-              value={mobileNumber}
-              onChange={e => setMobileNumber(e.target.value)}
-              className="w-full bg-white/10 hover:bg-white/15 focus:bg-white/20 border border-white/20 focus:border-white/40 rounded-xl py-3.5 pl-12 pr-4 text-sm text-white placeholder-white/50 outline-none transition"
-            />
+          <div className="flex flex-col gap-1">
+            <div className="relative flex items-center">
+              <Smartphone className={`absolute left-4 w-5 h-5 pointer-events-none transition ${isMobileRegistered ? 'text-red-300' : 'text-white/50'}`} />
+              <input 
+                type="tel"
+                placeholder="Mobile Number"
+                value={mobileNumber}
+                onChange={e => setMobileNumber(e.target.value)}
+                className={`w-full py-3.5 pl-12 pr-4 text-sm text-white placeholder-white/50 outline-none transition rounded-xl ${
+                  isMobileRegistered 
+                    ? 'bg-red-500/20 border-2 border-red-500 focus:border-red-400 ring-2 ring-red-500/30' 
+                    : 'bg-white/10 hover:bg-white/15 focus:bg-white/20 border border-white/20 focus:border-white/40'
+                }`}
+              />
+            </div>
+            {isMobileRegistered && (
+              <p className="text-xs text-red-300 font-semibold flex items-center gap-1.5 px-1 mt-0.5 animate-fade-in">
+                <Info size={14} className="shrink-0 text-red-300" />
+                <span>This mobile number is already registered. Please log in or use another number.</span>
+              </p>
+            )}
           </div>
 
           {/* Email Address field */}
-          <div className="relative flex items-center">
-            <Mail className="absolute left-4 text-white/50 w-5 h-5 pointer-events-none" />
-            <input 
-              type="email"
-              placeholder="Email Address"
-              value={signupEmail}
-              onChange={e => setSignupEmail(e.target.value)}
-              className="w-full bg-white/10 hover:bg-white/15 focus:bg-white/20 border border-white/20 focus:border-white/40 rounded-xl py-3.5 pl-12 pr-4 text-sm text-white placeholder-white/50 outline-none transition"
-            />
+          <div className="flex flex-col gap-1">
+            <div className="relative flex items-center">
+              <Mail className={`absolute left-4 w-5 h-5 pointer-events-none transition ${isEmailRegistered ? 'text-red-300' : 'text-white/50'}`} />
+              <input 
+                type="email"
+                placeholder="Email Address"
+                value={signupEmail}
+                onChange={e => setSignupEmail(e.target.value)}
+                className={`w-full py-3.5 pl-12 pr-4 text-sm text-white placeholder-white/50 outline-none transition rounded-xl ${
+                  isEmailRegistered 
+                    ? 'bg-red-500/20 border-2 border-red-500 focus:border-red-400 ring-2 ring-red-500/30' 
+                    : 'bg-white/10 hover:bg-white/15 focus:bg-white/20 border border-white/20 focus:border-white/40'
+                }`}
+              />
+            </div>
+            {isEmailRegistered && (
+              <p className="text-xs text-red-300 font-semibold flex items-center gap-1.5 px-1 mt-0.5 animate-fade-in">
+                <Info size={14} className="shrink-0 text-red-300" />
+                <span>This email address is already registered. Please log in or use another email.</span>
+              </p>
+            )}
           </div>
 
           {/* Create Password field */}
